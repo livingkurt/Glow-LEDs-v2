@@ -1,0 +1,37 @@
+.checkbox {
+  border-radius: 15px;
+  height: 1.6rem;
+  width: 13px;
+  border: 1px silver solid;
+  margin-right: 5px;
+}
+
+label input {
+  visibility: hidden;
+  display: block;
+  height: 0;
+  width: 0;
+  position: absolute;
+  overflow: hidden;
+}
+
+label span {
+  height: 18px;
+  width: 18px;
+  /* border: 1px solid grey; */
+  display: inline-block;
+  border-radius: 15px;
+  border: 1px silver solid;
+  margin: 5px 5px 5px 0px;
+  transition: color 0.5s box-shadow;
+  /* transition: border 0.5s box-shadow; */
+}
+
+label span:hover {
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  /* border: 0px */
+}
+
+[type=checkbox]:checked+span {
+  background: rgb(64, 155, 241);
+}
