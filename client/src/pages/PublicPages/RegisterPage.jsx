@@ -37,7 +37,8 @@ const RegisterPage = (props) => {
 		console.log(request);
 		console.log(request.errors.email);
 		if (request.isValid) {
-			dispatch(register(first_name, last_name, email, password));
+			dispatch(register({ first_name, last_name, email, password, rePassword }));
+			// dispatch(registerUser(first_name, last_name, email, password, rePassword));
 		}
 	};
 

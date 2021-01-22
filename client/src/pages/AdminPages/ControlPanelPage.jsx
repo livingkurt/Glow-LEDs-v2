@@ -695,6 +695,7 @@ const ControlPanelPage = (props) => {
 						</table>
 					</div>
 				)}
+				{console.log({ orders })}
 				{orders &&
 				promos &&
 				affiliates && (

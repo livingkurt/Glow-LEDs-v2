@@ -11,6 +11,7 @@ const Header = (props) => {
 	const [ first_name, set_first_name ] = useState('');
 	const userLogin = useSelector((state) => state.userLogin);
 	const { userInfo } = userLogin;
+	console.log({ userInfo });
 
 	useEffect(
 		() => {
@@ -37,6 +38,7 @@ const Header = (props) => {
 	const dispatch = useDispatch();
 
 	const handleLogout = () => {
+		// dispatch(logout());
 		dispatch(logout());
 		history.push('/account/login');
 	};
@@ -593,7 +595,8 @@ const Header = (props) => {
 							{cartItems.reduce((a, c) => parseInt(a) + parseInt(c.qty), 0)}{' '}
 						</button>
 					</Link>
-					{props.userInfo ? (
+					{console.log({ userInfo })}
+					{userInfo && userInfo.hasOwnProperty('first_name') ? (
 						<div className="dropdown">
 							<button className="btn nav">{first_name}</button>
 							<ul className="dropdown-content hover_fade_in w-110px">
@@ -603,9 +606,6 @@ const Header = (props) => {
 								<Link to="/secure/account/orders">
 									<button className="btn nav">Orders</button>
 								</Link>
-								{/* <Link to="/secure/account/devices">
-									<button className="btn nav">Devices</button>
-								</Link> */}
 								<button className="btn nav mr-auto" onClick={handleLogout}>
 									{' '}
 									Logout
@@ -619,8 +619,49 @@ const Header = (props) => {
 							</Link>
 						</div>
 					)}
-					{props.userInfo &&
-					props.userInfo.isAdmin && (
+					{/* {userInfo && userInfo.hasOwnProperty('first_name') ? (
+						<div>
+							<Link to="/account/login">
+								<button className="btn nav">Login</button>
+							</Link>
+						</div>
+					) : (
+						<div className="dropdown">
+							<button className="btn nav">{first_name}</button>
+							<ul className="dropdown-content hover_fade_in w-110px">
+								<Link to="/secure/account/profile">
+									<button className="btn nav">Profile</button>
+								</Link>
+								<Link to="/secure/account/orders">
+									<button className="btn nav">Orders</button>
+								</Link>
+								<button className="btn nav mr-auto" onClick={handleLogout}>
+									{' '}
+									Logout
+								</button>
+							</ul>
+						</div>
+					)} */}
+					{/* {userInfo && (
+						<div className="dropdown">
+							<button className="btn nav">{first_name}</button>
+							<ul className="dropdown-content hover_fade_in w-110px">
+								<Link to="/secure/account/profile">
+									<button className="btn nav">Profile</button>
+								</Link>
+								<Link to="/secure/account/orders">
+									<button className="btn nav">Orders</button>
+								</Link>
+					
+								<button className="btn nav mr-auto" onClick={handleLogout}>
+									{' '}
+									Logout
+								</button>
+							</ul>
+						</div>
+					)} */}
+					{userInfo &&
+					userInfo.isAdmin && (
 						<div className="dropdown ">
 							<button className="btn nav">Admin</button>
 							<ul className="dropdown-content hover_fade_in">

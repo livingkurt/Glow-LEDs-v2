@@ -3,7 +3,10 @@ import express from 'express';
 import User from '../models/user';
 import Log from '../models/log';
 const { getToken, isAuth } = require('../util');
-import bcrypt from 'bcryptjs';
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+const config = require('../config');
+const passport = require('passport');
 import { log_error, log_request } from '../util';
 require('dotenv');
 
@@ -12,6 +15,261 @@ const router = express.Router();
 // router.get('/', isAuth, async (req: any, res: { send: (arg0: any) => void }) => {
 // 	const users = await User.find({ deleted: false }).populate('user').sort({ createdAt: -1 });
 // 	res.send(users);
+// });
+
+const validateRegisterInput = require('../validation/register');
+const validateLoginInput = require('../validation/login');
+
+// @route POST api/users/register
+// @desc Register user
+// @access Public
+router.post('/register', (req, res) => {
+	// Form validation
+
+	const { errors, isValid } = validateRegisterInput(req.body);
+
+	// Check validation
+	if (!isValid) {
+		return res.status(400).json(errors);
+	}
+
+	User.findOne({ email: req.body.email }).then((user) => {
+		if (user) {
+			return res.status(400).json({ email: 'Email already exists' });
+		} else {
+			const newUser: any = new User({
+				first_name: req.body.first_name,
+				last_name: req.body.last_name,
+				email: req.body.email,
+				password: req.body.password,
+				affiliate: req.body.affiliate,
+				is_affiliated: req.body.is_affiliated,
+				email_subscription: req.body.email_subscription,
+				isAdmin: false,
+				isVerified: true
+			});
+
+			// Hash password before saving in database
+			bcrypt.genSalt(10, (err: any, salt: any) => {
+				bcrypt.hash(newUser.password, salt, (err: any, hash: any) => {
+					if (err) throw err;
+					newUser.password = hash;
+					newUser.save().then((user: any) => res.json(user)).catch((err: any) => console.log(err));
+				});
+			});
+		}
+	});
+});
+
+// @route POST api/users/login
+// @desc Login user and return JWT token
+// @access Public
+router.post('/login', (req, res) => {
+	// Form validation
+
+	const { errors, isValid } = validateLoginInput(req.body);
+
+	// Check validation
+	if (!isValid) {
+		return res.status(400).json(errors);
+	}
+
+	const email = req.body.email;
+	const password = req.body.password;
+
+	// Find user by email
+	User.findOne({ email }).then((user: any) => {
+		// Check if user exists
+		if (!user) {
+			return res.status(404).json({ emailnotfound: 'Email not found' });
+		}
+
+		// Check password
+		bcrypt.compare(password, user.password).then((isMatch: any) => {
+			if (isMatch) {
+				// User matched
+				// Create JWT Payload
+				const payload = {
+					_id: user.id,
+					first_name: user.first_name,
+					last_name: user.last_name,
+					email: user.email,
+					affiliate: user.affiliate,
+					email_subscription: user.email_subscription,
+					is_affiliated: user.is_affiliated,
+					isVerified: user.isVerified,
+					isAdmin: user.isAdmin,
+					shipping: user.shipping,
+					token: getToken(user)
+				};
+
+				// Sign token
+				jwt.sign(
+					payload,
+					config.JWT_SECRET,
+					{
+						expiresIn: 31556926 // 1 year in seconds
+					},
+					(err: any, token: string) => {
+						res.json({
+							success: true,
+							token: 'Bearer ' + token
+						});
+					}
+				);
+			} else {
+				return res.status(400).json({ passwordincorrect: 'Password incorrect' });
+			}
+		});
+	});
+});
+
+// router.post('/login', async (req, res) => {
+// 	try {
+// 		const email = req.body.email;
+// 		const password = req.body.password;
+
+// 		const login_user: any = await User.findOne({ email });
+// 		if (!login_user) {
+// 			log_request({
+// 				method: 'POST',
+// 				path: req.originalUrl,
+// 				collection: 'User',
+// 				data: [ login_user ],
+// 				status: 404,
+// 				success: false,
+// 				ip: req.headers['x-forwarded-for'] || req.connection.remoteAddress
+// 			});
+// 			return res.status(404).send({ message: 'Email not found' });
+// 		}
+// 		if (!login_user.isVerified) {
+// 			log_request({
+// 				method: 'POST',
+// 				path: req.originalUrl,
+// 				collection: 'User',
+// 				data: [ login_user ],
+// 				status: 404,
+// 				success: false,
+// 				ip: req.headers['x-forwarded-for'] || req.connection.remoteAddress
+// 			});
+// 			return res.status(404).send({ message: 'Account not Verified' });
+// 		}
+// 		// Check password
+// 		const isMatch = await bcrypt.compare(password, login_user.password);
+// 		if (isMatch) {
+// 			log_request({
+// 				method: 'POST',
+// 				path: req.originalUrl,
+// 				collection: 'User',
+// 				data: [ isMatch ],
+// 				status: 200,
+// 				success: true,
+// 				ip: req.headers['x-forwarded-for'] || req.connection.remoteAddress
+// 			});
+// 			res.send({
+// 				_id: login_user.id,
+// 				first_name: login_user.first_name,
+// 				last_name: login_user.last_name,
+// 				email: login_user.email,
+// 				isAdmin: login_user.isAdmin,
+// 				affiliate: login_user.affiliate,
+// 				is_affiliated: login_user.is_affiliated,
+// 				email_subscription: login_user.email_subscription,
+// 				isVerified: login_user.isVerified,
+// 				shipping: login_user.shipping,
+// 				token: getToken(login_user)
+// 			});
+// 		} else {
+// 			log_error({
+// 				method: 'PUT',
+// 				path: req.originalUrl,
+// 				collection: 'User',
+// 				data: [ isMatch ],
+// 				status: 500,
+// 				success: false,
+// 				ip: req.headers['x-forwarded-for'] || req.connection.remoteAddress
+// 			});
+// 			return res.status(400).send({ message: 'Password incorrect' });
+// 		}
+// 	} catch (error) {
+// 		log_error({
+// 			method: 'PUT',
+// 			path: req.originalUrl,
+// 			collection: 'User',
+// 			error,
+// 			status: 500,
+// 			success: false
+// 		});
+// 		res.status(500).send({ error, message: 'Error Logging User' });
+// 	}
+// });
+// router.post('/register', async (req, res) => {
+// 	console.log({ register: req.body });
+// 	try {
+// 		const newUser: any = new User({
+// 			first_name: req.body.first_name,
+// 			last_name: req.body.last_name,
+// 			email: req.body.email,
+// 			password: req.body.password,
+// 			affiliate: req.body.affiliate,
+// 			is_affiliated: req.body.is_affiliated,
+// 			email_subscription: req.body.email_subscription,
+// 			isAdmin: false,
+// 			isVerified: true
+// 		});
+// 		const user = await User.findOne({ email: newUser.email });
+// 		if (user) {
+// 			log_request({
+// 				method: 'POST',
+// 				path: req.originalUrl,
+// 				collection: 'User',
+// 				data: [ user ],
+// 				status: 400,
+// 				success: false,
+// 				ip: req.headers['x-forwarded-for'] || req.connection.remoteAddress
+// 			});
+// 			return res.status(400).send({ message: 'Email already exists' });
+// 		} else {
+// 			bcrypt.genSalt(10, (err: any, salt: any) => {
+// 				bcrypt.hash(newUser.password, salt, async (err: any, hash: any) => {
+// 					if (err) throw err;
+// 					newUser.password = hash;
+// 					await newUser.save();
+// 					log_request({
+// 						method: 'POST',
+// 						path: req.originalUrl,
+// 						collection: 'User',
+// 						data: [ newUser ],
+// 						status: 200,
+// 						success: true,
+// 						ip: req.headers['x-forwarded-for'] || req.connection.remoteAddress
+// 					});
+// 					res.json({
+// 						_id: newUser.id,
+// 						first_name: newUser.first_name,
+// 						last_name: newUser.last_name,
+// 						email: newUser.email,
+// 						isAdmin: newUser.isAdmin,
+// 						is_affiliated: newUser.is_affiliated,
+// 						email_subscription: newUser.email_subscription,
+// 						isVerified: newUser.isVerified,
+// 						shipping: newUser.shipping,
+// 						token: getToken(newUser)
+// 					});
+// 				});
+// 			});
+// 		}
+// 	} catch (error) {
+// 		log_error({
+// 			method: 'PUT',
+// 			path: req.originalUrl,
+// 			collection: 'User',
+// 			error,
+// 			status: 500,
+// 			success: false
+// 		});
+// 		res.status(500).send({ error, message: 'Error Registering User' });
+// 	}
 // });
 
 router.get('/', async (req, res) => {
@@ -589,154 +847,6 @@ router.put('/verify/:id', async (req, res) => {
 			success: false
 		});
 		res.status(500).send({ error, message: 'Error Verifying User' });
-	}
-});
-
-router.post('/login', async (req, res) => {
-	try {
-		const email = req.body.email;
-		const password = req.body.password;
-
-		const login_user: any = await User.findOne({ email });
-		if (!login_user) {
-			log_request({
-				method: 'POST',
-				path: req.originalUrl,
-				collection: 'User',
-				data: [ login_user ],
-				status: 404,
-				success: false,
-				ip: req.headers['x-forwarded-for'] || req.connection.remoteAddress
-			});
-			return res.status(404).send({ message: 'Email not found' });
-		}
-		if (!login_user.isVerified) {
-			log_request({
-				method: 'POST',
-				path: req.originalUrl,
-				collection: 'User',
-				data: [ login_user ],
-				status: 404,
-				success: false,
-				ip: req.headers['x-forwarded-for'] || req.connection.remoteAddress
-			});
-			return res.status(404).send({ message: 'Account not Verified' });
-		}
-		// Check password
-		const isMatch = await bcrypt.compare(password, login_user.password);
-		if (isMatch) {
-			log_request({
-				method: 'POST',
-				path: req.originalUrl,
-				collection: 'User',
-				data: [ isMatch ],
-				status: 200,
-				success: true,
-				ip: req.headers['x-forwarded-for'] || req.connection.remoteAddress
-			});
-			res.send({
-				_id: login_user.id,
-				first_name: login_user.first_name,
-				last_name: login_user.last_name,
-				email: login_user.email,
-				isAdmin: login_user.isAdmin,
-				affiliate: login_user.affiliate,
-				is_affiliated: login_user.is_affiliated,
-				email_subscription: login_user.email_subscription,
-				isVerified: login_user.isVerified,
-				shipping: login_user.shipping,
-				token: getToken(login_user)
-			});
-		} else {
-			log_error({
-				method: 'PUT',
-				path: req.originalUrl,
-				collection: 'User',
-				data: [ isMatch ],
-				status: 500,
-				success: false,
-				ip: req.headers['x-forwarded-for'] || req.connection.remoteAddress
-			});
-			return res.status(400).send({ message: 'Password incorrect' });
-		}
-	} catch (error) {
-		log_error({
-			method: 'PUT',
-			path: req.originalUrl,
-			collection: 'User',
-			error,
-			status: 500,
-			success: false
-		});
-		res.status(500).send({ error, message: 'Error Logging User' });
-	}
-});
-router.post('/register', async (req, res) => {
-	console.log({ register: req.body });
-	try {
-		const newUser: any = new User({
-			first_name: req.body.first_name,
-			last_name: req.body.last_name,
-			email: req.body.email,
-			password: req.body.password,
-			affiliate: req.body.affiliate,
-			is_affiliated: req.body.is_affiliated,
-			email_subscription: req.body.email_subscription,
-			isAdmin: false,
-			isVerified: true
-		});
-		const user = await User.findOne({ email: newUser.email });
-		if (user) {
-			log_request({
-				method: 'POST',
-				path: req.originalUrl,
-				collection: 'User',
-				data: [ user ],
-				status: 400,
-				success: false,
-				ip: req.headers['x-forwarded-for'] || req.connection.remoteAddress
-			});
-			return res.status(400).send({ message: 'Email already exists' });
-		} else {
-			bcrypt.genSalt(10, (err: any, salt: any) => {
-				bcrypt.hash(newUser.password, salt, async (err: any, hash: any) => {
-					if (err) throw err;
-					newUser.password = hash;
-					await newUser.save();
-					log_request({
-						method: 'POST',
-						path: req.originalUrl,
-						collection: 'User',
-						data: [ newUser ],
-						status: 200,
-						success: true,
-						ip: req.headers['x-forwarded-for'] || req.connection.remoteAddress
-					});
-					res.json({
-						_id: newUser.id,
-						first_name: newUser.first_name,
-						last_name: newUser.last_name,
-						email: newUser.email,
-						isAdmin: newUser.isAdmin,
-						is_affiliated: newUser.is_affiliated,
-						email_subscription: newUser.email_subscription,
-						isVerified: newUser.isVerified,
-						shipping: newUser.shipping,
-						token: getToken(newUser)
-					});
-				});
-			});
-		}
-	} catch (error) {
-		log_error({
-			method: 'PUT',
-			path: req.originalUrl,
-			collection: 'User',
-			error,
-			status: 500,
-			success: false
-		});
-		res.status(500).send({ error, message: 'Error Registering User' });
 	}
 });
 

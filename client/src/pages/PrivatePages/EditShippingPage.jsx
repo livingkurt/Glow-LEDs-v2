@@ -15,10 +15,7 @@ const ProfilePage = (props) => {
 
 	const userLogin = useSelector((state) => state.userLogin);
 	const { userInfo } = userLogin;
-	const handleLogout = () => {
-		dispatch(logout());
-		props.history.push('/account/login');
-	};
+
 	const submitHandler = (e) => {
 		e.preventDefault();
 		dispatch(update({ userId: userInfo._id, email, name, password }));

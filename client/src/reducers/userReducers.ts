@@ -38,22 +38,67 @@ import {
 	USER_SAVE_SUCCESS,
 	USER_SAVE_FAIL
 } from '../constants/userConstants';
+import { SET_CURRENT_USER, USER_LOADING } from '../actions/types';
 
-export const userLoginReducer = (state = {}, action: { type: any; payload: any }) => {
+const isEmpty = require('is-empty');
+
+const initialState = {
+	isAuthenticated: false,
+	userInfo: {},
+	loading: false
+};
+
+// export default function(state = initialState, action: { type: any; payload: any }) {
+// 	switch (action.type) {
+// 		case SET_CURRENT_USER:
+// 			return {
+// 				...state,
+// 				isAuthenticated: !isEmpty(action.payload),
+// 				user: action.payload
+// 			};
+// 		case USER_LOADING:
+// 			return {
+// 				...state,
+// 				loading: true
+// 			};
+// 		default:
+// 			return state;
+// 	}
+// }
+
+export const userLoginReducer = (state = initialState, action: { type: any; payload: any }) => {
 	switch (action.type) {
-		case USER_LOGIN_REQUEST:
-			return { loading: true };
-		case USER_LOGIN_SUCCESS:
-			return { loading: false, userInfo: action.payload };
-		case USER_LOGIN_FAIL:
-			console.log({ payload: action.payload });
-			return { loading: false, error: action.payload };
-		case USER_LOGOUT:
-			return {};
+		case SET_CURRENT_USER:
+			return {
+				...state,
+				// isAuthenticated: !isEmpty(action.payload),
+				userInfo: action.payload
+			};
+		case USER_LOADING:
+			return {
+				...state,
+				loading: true
+			};
 		default:
 			return state;
 	}
 };
+
+// export const userLoginReducer = (state = {}, action: { type: any; payload: any }) => {
+// 	switch (action.type) {
+// 		case USER_LOGIN_REQUEST:
+// 			return { loading: true };
+// 		case USER_LOGIN_SUCCESS:
+// 			return { loading: false, userInfo: action.payload };
+// 		case USER_LOGIN_FAIL:
+// 			console.log({ payload: action.payload });
+// 			return { loading: false, error: action.payload };
+// 		case USER_LOGOUT:
+// 			return {};
+// 		default:
+// 			return state;
+// 	}
+// };
 
 export const userPasswordResetReducer = (state = {}, action: { type: any; payload: any }) => {
 	switch (action.type) {

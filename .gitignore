@@ -117,6 +117,7 @@ client/public/gifs/full_sized_gifs
 util.js
 server.js
 config.js
+passport.js
 
 routes/user_routes.js
 routes/product_routes.js

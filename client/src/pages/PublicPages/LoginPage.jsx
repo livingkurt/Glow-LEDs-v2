@@ -15,13 +15,13 @@ const LoginPage = (props) => {
 
 	const userLogin = useSelector((state) => state.userLogin);
 	const { loading, userInfo, error } = userLogin;
-	console.log({ userLogin });
+	console.log({ userInfo });
 	const dispatch = useDispatch();
 	const redirect = props.location.search ? props.location.search.split('=')[1] : '/';
 
 	useEffect(
 		() => {
-			if (userInfo) {
+			if (userInfo && userInfo.hasOwnProperty('first_name')) {
 				props.history.push(redirect);
 			}
 			return () => {
@@ -40,7 +40,9 @@ const LoginPage = (props) => {
 		setPasswordValidations(request.errors.password);
 
 		if (request.isValid) {
-			dispatch(login(email, password));
+			dispatch(login({ email, password }));
+			console.log({ email, password });
+			// dispatch(loginUser(email, password));
 		}
 	};
 

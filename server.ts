@@ -10,6 +10,7 @@ import mongoose from 'mongoose';
 const config = require('./config');
 var cors = require('cors');
 require('dotenv').config();
+const passport = require('passport');
 const compression = require('compression');
 import {
 	user_routes,
@@ -26,6 +27,7 @@ import {
 	device_routes,
 	log_routes
 } from './routes/index';
+// import users from './routes/users';
 
 // const htmlRoutes = require('./email_templates/html_routes');
 
@@ -92,6 +94,11 @@ app.use(sslRedirect());
 // 		throttles: [ throttleByIp ]
 // 	})
 // );
+// Passport middleware
+app.use(passport.initialize());
+
+// Passport config
+require('./passport')(passport);
 
 app.use('/api/promos', promo_routes);
 app.use('/api/carts', cart_routes);
@@ -100,6 +107,7 @@ app.use('/api/affiliates', affiliate_routes);
 app.use('/api/expenses', expense_routes);
 app.use('/api/features', feature_routes);
 app.use('/api/users', user_routes);
+// app.use('/api/usess', users);
 app.use('/api/products', product_routes);
 app.use('/api/orders', order_routes);
 app.use('/api/emails', email_routes);
