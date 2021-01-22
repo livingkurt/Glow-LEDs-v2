@@ -45,6 +45,7 @@ import { GET_ERRORS, SET_CURRENT_USER, USER_LOADING } from './types';
 
 // Register User
 export const register = (userData: any) => (dispatch: (arg0: { type: string; payload: any }) => any) => {
+	console.log({ userData });
 	axios.post('/api/users/register', userData).catch((err) =>
 		dispatch({
 			type: GET_ERRORS,

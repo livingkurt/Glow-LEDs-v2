@@ -25,13 +25,14 @@ const validateLoginInput = require('../validation/login');
 // @access Public
 router.post('/register', (req, res) => {
 	// Form validation
+	console.log({ body: req.body });
 
-	const { errors, isValid } = validateRegisterInput(req.body);
-
-	// Check validation
-	if (!isValid) {
-		return res.status(400).json(errors);
-	}
+	// const { errors, isValid } = validateRegisterInput(req.body);
+	// console.log({ isValid });
+	// // Check validation
+	// if (!isValid) {
+	// 	return res.status(400).json(errors);
+	// }
 
 	User.findOne({ email: req.body.email }).then((user) => {
 		if (user) {
