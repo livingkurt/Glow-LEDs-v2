@@ -5,62 +5,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Helmet } from 'react-helmet';
 
 const ProfilePage = (props) => {
-	// const userInfo = props.userInfo;
-
 	const userLogin = useSelector((state) => state.userLogin);
 	const { userInfo } = userLogin;
 	console.log({ userInfo });
-	// const [ first_name, set_first_name ] = useState('');
-	// const [ last_name, set_last_name ] = useState('');
-	// const [ shipping, set_shipping ] = useState({});
-	// const [ password, setPassword ] = useState('');
-	// const [ is_affiliated, set_is_affiliated ] = useState();
-	// const [ email_subscription, set_email_subscription ] = useState(true);
-	// const [ email, setEmail ] = useState('');
-	// const dispatch = useDispatch();
-
-	// const userUpdate = useSelector((state) => state.userUpdate);
-
-	// useEffect(
-	// 	() => {
-
-	// 		return () => {};
-	// 	},
-	// 	[ userInfo ]
-	// );
-	// useEffect(
-	// 	() => {
-	// 		// if (userInfo) {
-	// 		// 	setEmail(userInfo.email);
-	// 		// 	set_first_name(userInfo.first_name);
-	// 		// 	set_last_name(userInfo.last_name);
-	// 		// 	set_shipping(userInfo.shipping);
-	// 		// 	setPassword(userInfo.password);
-	// 		// 	set_is_affiliated(userInfo.is_affiliated);
-	// 		// 	set_email_subscription(userInfo.email_subscription);
-	// 		// }
-	// 		dispatch(listMyOrders());
-	// 		return () => {};
-	// 	},
-	// 	[ userInfo ]
-	// );
-
-	// useEffect(
-	// 	() => {
-	// 		if (userUpdate.userInfo) {
-	// 			setEmail(userUpdate.userInfo.email);
-	// 			set_first_name(userUpdate.userInfo.first_name);
-	// 			set_last_name(userUpdate.userInfo.last_name);
-	// 			set_shipping(userUpdate.userInfo.shipping);
-	// 			setPassword(userUpdate.userInfo.password);
-	// 			set_is_affiliated(userUpdate.userInfo.is_affiliated);
-
-	// 			set_email_subscription(userUpdate.email_subscription);
-	// 		}
-	// 		return () => {};
-	// 	},
-	// 	[ userUpdate.userInfo ]
-	// );
 
 	return (
 		<div className="column p-20px inner_content">

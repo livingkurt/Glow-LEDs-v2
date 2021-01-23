@@ -20,8 +20,8 @@ const UserProfilePage = (props) => {
 	const dispatch = useDispatch();
 	const stableDispatch = useCallback(dispatch, []);
 
-	const userUpdateUser = useSelector((state) => state.userUpdateUser);
-	const { userInfo: userUpdate } = userUpdateUser;
+	// const userUpdateUser = useSelector((state) => state.userUpdateUser);
+	// const { userInfo: userUpdate } = userUpdateUser;
 
 	useEffect(
 		() => {
@@ -45,20 +45,20 @@ const UserProfilePage = (props) => {
 		[ user ]
 	);
 
-	useEffect(
-		() => {
-			if (userUpdate) {
-				setEmail(userUpdate.email);
-				set_first_name(userUpdate.first_name);
-				set_last_name(userUpdate.last_name);
-				set_verified(userUpdate.isVerified);
-				set_admin(userUpdate.isAdmin);
-				// setPassword(userUpdate.password);
-			}
-			return () => {};
-		},
-		[ userUpdate ]
-	);
+	// useEffect(
+	// 	() => {
+	// 		if (userUpdate) {
+	// 			setEmail(userUpdate.email);
+	// 			set_first_name(userUpdate.first_name);
+	// 			set_last_name(userUpdate.last_name);
+	// 			set_verified(userUpdate.isVerified);
+	// 			set_admin(userUpdate.isAdmin);
+	// 			// setPassword(userUpdate.password);
+	// 		}
+	// 		return () => {};
+	// 	},
+	// 	[ userUpdate ]
+	// );
 
 	const container_styles = {
 		marginBottom: '20px'

@@ -56,17 +56,17 @@ const Sidebar = (props) => {
 		[ userInfo ]
 	);
 
-	const userUpdate = useSelector((state) => state.userUpdate);
+	// const userUpdate = useSelector((state) => state.userUpdate);
 
-	useEffect(
-		() => {
-			if (userUpdate.userInfo) {
-				set_first_name(userUpdate.userInfo.first_name);
-			}
-			return () => {};
-		},
-		[ userUpdate.userInfo ]
-	);
+	// useEffect(
+	// 	() => {
+	// 		if (userUpdate.userInfo) {
+	// 			set_first_name(userUpdate.userInfo.first_name);
+	// 		}
+	// 		return () => {};
+	// 	},
+	// 	[ userUpdate.userInfo ]
+	// );
 
 	return (
 		<aside ref={wrapperRef} className="sidebar">

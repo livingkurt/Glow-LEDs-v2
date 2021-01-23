@@ -28,7 +28,7 @@ const ShippingPage = (props) => {
 	const [ all_shipping, set_all_shipping ] = useState([]);
 	const [ loading, set_loading ] = useState(true);
 
-	const userUpdate = useSelector((state) => state.userUpdate);
+	// const userUpdate = useSelector((state) => state.userUpdate);
 
 	useEffect(
 		() => {
@@ -49,24 +49,24 @@ const ShippingPage = (props) => {
 		[ user_data ]
 	);
 
-	useEffect(
-		() => {
-			if (userUpdate.userInfo) {
-				set_first_name(userUpdate.userInfo.shipping.first_name);
-				set_last_name(userUpdate.userInfo.shipping.last_name);
-				set_address_1(userUpdate.userInfo.shipping.address_1);
-				set_address_2(userUpdate.userInfo.shipping.address_2);
-				setCity(userUpdate.userInfo.shipping.city);
-				setState(userUpdate.userInfo.shipping.state);
-				setPostalCode(userUpdate.userInfo.shipping.postalCode);
-				setCountry(userUpdate.userInfo.shipping.country);
-				setInternational(userUpdate.userInfo.shipping.international);
-			}
+	// useEffect(
+	// 	() => {
+	// 		if (userUpdate.userInfo) {
+	// 			set_first_name(userUpdate.userInfo.shipping.first_name);
+	// 			set_last_name(userUpdate.userInfo.shipping.last_name);
+	// 			set_address_1(userUpdate.userInfo.shipping.address_1);
+	// 			set_address_2(userUpdate.userInfo.shipping.address_2);
+	// 			setCity(userUpdate.userInfo.shipping.city);
+	// 			setState(userUpdate.userInfo.shipping.state);
+	// 			setPostalCode(userUpdate.userInfo.shipping.postalCode);
+	// 			setCountry(userUpdate.userInfo.shipping.country);
+	// 			setInternational(userUpdate.userInfo.shipping.international);
+	// 		}
 
-			return () => {};
-		},
-		[ userUpdate ]
-	);
+	// 		return () => {};
+	// 	},
+	// 	[ userUpdate ]
+	// );
 
 	useEffect(
 		() => {

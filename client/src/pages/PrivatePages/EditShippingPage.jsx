@@ -21,8 +21,8 @@ const ProfilePage = (props) => {
 		dispatch(update({ userId: userInfo._id, email, name, password }));
 		history.push('/secure/account/profile');
 	};
-	const userUpdate = useSelector((state) => state.userUpdate);
-	const { loading, success, error } = userUpdate;
+	// const userUpdate = useSelector((state) => state.userUpdate);
+	// const { loading, success, error } = userUpdate;
 
 	const myOrderList = useSelector((state) => state.myOrderList);
 	const { loading: loadingOrders, orders, error: errorOrders } = myOrderList;
@@ -65,9 +65,9 @@ const ProfilePage = (props) => {
 							</li>
 							<li>
 								<div className="jc-c">
-									<Loading loading={loading} error={error}>
+									{/* <Loading loading={loading} error={error}>
 										{success && <h3 style={{ textAlign: 'center' }}>Profile Saved Successfully</h3>}
-									</Loading>
+									</Loading> */}
 								</div>
 							</li>
 							<li>

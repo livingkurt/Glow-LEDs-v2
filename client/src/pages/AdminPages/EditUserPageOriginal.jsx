@@ -54,10 +54,10 @@ const EditUserPage = (props) => {
 		}
 	};
 
-	const userUpdateUser = useSelector((state) => state.userUpdateUser);
-	const { loading, userInfo: userUpdate, error } = userUpdateUser;
+	// const userUpdateUser = useSelector((state) => state.userUpdateUser);
+	// const { loading, userInfo: userUpdate, error } = userUpdateUser;
 
-	console.log({ userUpdateUser });
+	// console.log({ userUpdateUser });
 	useEffect(
 		() => {
 			if (user) {
@@ -76,25 +76,25 @@ const EditUserPage = (props) => {
 		[ user ]
 	);
 
-	useEffect(
-		() => {
-			console.log({ userUpdate });
-			if (userUpdate) {
-				console.log({ userUpdate: userUpdate });
-				set_email(userUpdate.email);
-				set_first_name(userUpdate.first_name);
-				set_last_name(userUpdate.last_name);
-				set_is_affiliated(userUpdate.isAffiliated);
-				set_affiliate(userUpdate.affiliate);
-				set_verified(userUpdate.isVerified);
-				set_admin(userUpdate.isAdmin);
-				// setPassword(userUpdate.password);
-			}
+	// useEffect(
+	// 	() => {
+	// 		console.log({ userUpdate });
+	// 		if (userUpdate) {
+	// 			console.log({ userUpdate: userUpdate });
+	// 			set_email(userUpdate.email);
+	// 			set_first_name(userUpdate.first_name);
+	// 			set_last_name(userUpdate.last_name);
+	// 			set_is_affiliated(userUpdate.isAffiliated);
+	// 			set_affiliate(userUpdate.affiliate);
+	// 			set_verified(userUpdate.isVerified);
+	// 			set_admin(userUpdate.isAdmin);
+	// 			// setPassword(userUpdate.password);
+	// 		}
 
-			return () => {};
-		},
-		[ userUpdate ]
-	);
+	// 		return () => {};
+	// 	},
+	// 	[ userUpdate ]
+	// );
 
 	return (
 		<div className="profile_container column p-20px">

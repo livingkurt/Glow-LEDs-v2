@@ -37,8 +37,8 @@ const ChangePasswordPage = (props) => {
 		}
 	};
 
-	const userUpdate = useSelector((state) => state.userUpdate);
-	const { loading, success, error } = userUpdate;
+	// const userUpdate = useSelector((state) => state.userUpdate);
+	// const { loading, success, error } = userUpdate;
 
 	const stableDispatch = useCallback(dispatch, []);
 
@@ -53,16 +53,16 @@ const ChangePasswordPage = (props) => {
 		[ userInfo, stableDispatch ]
 	);
 
-	useEffect(
-		() => {
-			if (userUpdate.userInfo) {
-				setPassword(userUpdate.userInfo.password);
-			}
+	// useEffect(
+	// 	() => {
+	// 		if (userUpdate.userInfo) {
+	// 			setPassword(userUpdate.userInfo.password);
+	// 		}
 
-			return () => {};
-		},
-		[ userUpdate.userInfo ]
-	);
+	// 		return () => {};
+	// 	},
+	// 	[ userUpdate.userInfo ]
+	// );
 
 	return (
 		<div className="profile_container column p-20px">
@@ -85,11 +85,11 @@ const ChangePasswordPage = (props) => {
 							<li>
 								<h1 style={{ textAlign: 'center' }}>Change Password</h1>
 							</li>
-							<li>
+							{/* <li>
 								<Loading loading={loading} error={error}>
 									<div className="jc-c">{success && <h3>Profile Saved Successfully</h3>}</div>
 								</Loading>
-							</li>
+							</li> */}
 							<li>
 								<label htmlFor="current_password">Current Password</label>
 								<input
