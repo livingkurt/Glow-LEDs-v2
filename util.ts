@@ -10,19 +10,52 @@ export interface IGetUserAuthInfoRequest extends Request {
 	user: any; // or any other type
 }
 
-export const getToken = (user: { _id: any; first_name: any; last_name: any; email: any; isAdmin: any }) => {
+export const getToken = (user: any) => {
+	// const payload = {
+	// 	_id: user.id,
+	// 	first_name: user.first_name,
+	// 	last_name: user.last_name,
+	// 	email: user.email,
+	// 	affiliate: user.affiliate,
+	// 	email_subscription: user.email_subscription,
+	// 	is_affiliated: user.is_affiliated,
+	// 	isVerified: user.isVerified,
+	// 	isAdmin: user.isAdmin,
+	// 	shipping: user.shipping
+	// };
+
+	// return jwt.sign(
+	// 	payload,
+	// 	config.JWT_SECRET,
+	// 	{
+	// 		expiresIn: 31556926 // 1 year in seconds
+	// 	},
+	// 	(err, token) => {
+	// 		return {
+	// 			success: true,
+	// 			token: 'Bearer ' + token
+	// 		};
+	// 	}
+	// );
+
 	return jwt.sign(
 		{
 			_id: user._id,
 			first_name: user.first_name,
 			last_name: user.last_name,
 			email: user.email,
-			isAdmin: user.isAdmin
+			password: user.password,
+			isAdmin: user.isAdmin,
+			isVerified: user.isVerified,
+			affiliate: user.affiliate,
+			email_subscription: user.email_subscription,
+			shipping: user.shipping,
+			is_affiliated: user.is_affiliated
 		},
-		config.JWT_SECRET
-		// {
-		// 	expiresIn: '48h'
-		// }
+		config.JWT_SECRET,
+		{
+			expiresIn: 31556926 // 1 year in seconds
+		}
 	);
 };
 

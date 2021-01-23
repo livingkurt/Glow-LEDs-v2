@@ -36,12 +36,15 @@ import {
 	USER_DETAILS_FAIL,
 	USER_UPDATE_USER_REQUEST,
 	USER_UPDATE_USER_SUCCESS,
-	USER_UPDATE_USER_FAIL
+	USER_UPDATE_USER_FAIL,
+	GET_ERRORS,
+	SET_CURRENT_USER,
+	USER_LOADING
 } from '../constants/userConstants';
 import setAuthToken from '../utils/setAuthToken';
 import jwt_decode from 'jwt-decode';
 
-import { GET_ERRORS, SET_CURRENT_USER, USER_LOADING } from './types';
+// import { GET_ERRORS, SET_CURRENT_USER, USER_LOADING } from './types';
 
 // Register User
 export const register = (userData: any) => (dispatch: (arg0: { type: string; payload: any }) => any) => {
@@ -149,19 +152,7 @@ export const update = (userdata: any) => async (
 	const { userLogin: { userInfo } } = getState();
 	dispatch({
 		type: USER_UPDATE_REQUEST,
-		payload: {
-			userId: userdata.userId,
-			first_name: userdata.first_name,
-			last_name: userdata.last_name,
-			email: userdata.email,
-			password: userdata.password,
-			is_affiliated: userdata.is_affiliated,
-			email_subscription: userdata.email_subscription,
-			affiliate: userdata.affiliate,
-			shipping: userdata.shipping,
-			verified: userdata.verified,
-			admin: userdata.admin
-		}
+		payload: {}
 	});
 	try {
 		const { data } = await axios.put(
@@ -175,8 +166,8 @@ export const update = (userdata: any) => async (
 				email_subscription: userdata.email_subscription,
 				affiliate: userdata.affiliate,
 				shipping: userdata.shipping,
-				verified: userdata.verified,
-				admin: userdata.admin
+				isVerified: userdata.isVerified,
+				isAdmin: userdata.isAdmin
 			},
 			{
 				headers: {
@@ -185,9 +176,15 @@ export const update = (userdata: any) => async (
 			}
 		);
 
-		console.log({ data });
 		dispatch({ type: USER_UPDATE_SUCCESS, payload: data });
-		Cookie.set('userInfo', JSON.stringify(data));
+
+		const { token } = data;
+		setAuthToken(token);
+		const decoded = jwt_decode(token);
+		console.log({ decoded });
+		// Set current user
+		localStorage.setItem('jwtToken', token);
+		dispatch(setCurrentUser(decoded));
 	} catch (error) {
 		dispatch({ type: USER_UPDATE_FAIL, payload: error.response.data.message });
 	}
@@ -238,8 +235,8 @@ export const updateUser = (userdata: any) => async (
 			is_affiliated: userdata.is_affiliated,
 			email_subscription: userdata.email_subscription,
 			affiliate: userdata.affiliate,
-			verified: userdata.verified,
-			admin: userdata.admin
+			isVerified: userdata.isVerified,
+			isAdmin: userdata.isAdmin
 		}
 	});
 	try {
@@ -253,8 +250,8 @@ export const updateUser = (userdata: any) => async (
 				is_affiliated: userdata.is_affiliated,
 				email_subscription: userdata.email_subscription,
 				affiliate: userdata.affiliate,
-				verified: userdata.verified,
-				admin: userdata.admin
+				isVerified: userdata.isVerified,
+				isAdmin: userdata.isAdmin
 			},
 			{
 				headers: {

@@ -123,7 +123,7 @@ const App = () => {
 			store.dispatch(logout());
 
 			// Redirect to login
-			window.location.href = './login';
+			window.location.href = '/account/login';
 		}
 	}
 
@@ -208,51 +208,6 @@ const App = () => {
 							/>
 							<PrivateRoute path="/secure/account/submission_complete" component={SubmissionComplete} />
 
-							{/* <PrivateRoute
-								path="/secure/account/profile"
-								component={(props) => <ProfilePage userInfo={userInfo} {...props} />}
-							/>
-							<PrivateRoute
-								path="/secure/account/editprofile"
-								component={(props) => <EditProfilePage userInfo={userInfo} {...props} />}
-							/>
-							<PrivateRoute
-								path="/secure/account/submit_feature"
-								component={(props) => <SubmitFeaturePage userInfo={userInfo} {...props} />}
-							/>
-							<PrivateRoute path="/secure/account/orders" component={MyOrdersPage} />
-							<PrivateRoute
-								path="/secure/checkout/shipping"
-								component={(props) => <ShippingPage userInfo={userInfo} {...props} />}
-							/>
-							<PrivateRoute path="/secure/account/glowcontrol/:id" component={GlowControlPage} />
-							<PrivateRoute path="/secure/account/devices" component={DevicesPage} />
-							<PrivateRoute
-								path="/secure/account/editdevice/:id?"
-								component={(props) => <EditDevicePage userInfo={userInfo} {...props} />}
-							/>
-							<PrivateRoute
-								path="/secure/account/order/:id"
-								component={(props) => <OrderPage userInfo={userInfo} {...props} />}
-							/>
-							<PrivateRoute
-								path="/secure/checkout/placeorder"
-								component={(props) => <PlaceOrderPage userInfo={userInfo} {...props} />}
-							/>
-							<PrivateRoute
-								path="/secure/account/affiliate_sign_up_complete"
-								component={(props) => <AffiliateCreationComplete userInfo={userInfo} {...props} />}
-							/>
-							<PrivateRoute
-								path="/secure/account/edit_affiliate/:id?"
-								component={(props) => <EditUserAffiliatePage userInfo={userInfo} {...props} />}
-							/>
-
-							<PrivateRoute
-								path="/secure/checkout/order/receipt/:id/:status/:send?"
-								component={OrderEmail}
-							/> */}
-
 							{/* Admin Routes */}
 							<AdminRoute path="/secure/glow/editproduct/:pathname?" component={EditProductPage} />
 							<AdminRoute path="/secure/glow/edit_all_data" component={EditAllDataPage} />
@@ -268,11 +223,11 @@ const App = () => {
 							<AdminRoute path="/secure/glow/editexpense/:id?" component={EditExpensePage} />
 							<AdminRoute path="/secure/glow/editfeature/:pathname?" component={EditFeaturePage} />
 							<AdminRoute path="/secure/glow/editcart/:id?" component={EditCartPage} />
-							{/* <AdminRoute path="/secure/glow/expenses" component={ExpensesPage} /> */}
-							<AdminRoute
+							<AdminRoute path="/secure/glow/expenses" component={ExpensesPage} />
+							{/* <AdminRoute
 								path="/secure/glow/expenses"
 								component={(props) => <ExpensesPage userInfo={userInfo} {...props} />}
-							/>
+							/> */}
 							<AdminRoute path="/secure/glow/features" component={FeaturesPage} />
 							<AdminRoute path="/secure/glow/carts" component={CartsPage} />
 							<AdminRoute path="/secure/glow/contents" component={ContentsPage} />
@@ -309,16 +264,12 @@ const App = () => {
 								exact={true}
 								component={PasswordChangedEmail}
 							/>
+							<AdminRoute path="/secure/glow/emails/invoice/:id?" exact={true} component={InvoiceEmail} />
 							{/* <AdminRoute
-								path="/secure/glow/emails/order/:id?"
-								exact={true}
-								component={(props) => <OrderEmail userInfo={userInfo} {...props} />}
-							/> */}
-							<AdminRoute
 								path="/secure/glow/emails/invoice/:id?"
 								exact={true}
 								component={(props) => <InvoiceEmail userInfo={userInfo} {...props} />}
-							/>
+							/> */}
 							<AdminRoute path="/secure/glow/emails" component={EmailsPage} />
 							<AdminRoute path="/secure/glow/editpromo/:id?" component={EditPromoPage} />
 							<AdminRoute path="/secure/glow/editaffiliate/:id?" component={EditAffiliatePage} />
@@ -344,11 +295,11 @@ const App = () => {
 							/>
 							<Route path="/checkout/shipping" component={ShippingPage} />
 
-							{/* <Route path="/checkout/cart/:pathname?" component={CartPage} /> */}
-							<Route
+							<Route path="/checkout/cart/:pathname?" component={CartPage} />
+							{/* <Route
 								path="/checkout/cart/:pathname?"
 								component={(props) => <CartPage userInfo={userInfo} {...props} />}
-							/>
+							/> */}
 							<Route path="/collections/all/products" exact={true} component={AllProductsPage} />
 							<Route
 								path="/collections/all/products/category/:category/subcategory/:subcategory?"
@@ -358,33 +309,43 @@ const App = () => {
 
 							<Route path="/collections/all/products/:pathname" component={ProductPage} />
 							<Route path="/checkout/order/receipt/:id/:status/:send?" component={OrderEmail} />
-							<Route
+							{/* <Route
 								path="/pages/contact/:reason?"
 								exact={true}
 								component={(props) => <ContactPage userInfo={userInfo} {...props} />}
-							/>
-							{/* <Route path="/pages/contact/:reason?" exact={true} component={ContactPage} /> */}
-							<Route
+							/> */}
+							<Route path="/pages/contact/:reason?" exact={true} component={ContactPage} />
+							<Route path="/pages/glowcontrol" component={ContactPage} />
+							{/* <Route
 								path="/pages/glowcontrol"
 								component={(props) => <GlowControlHomePage userInfo={userInfo} {...props} />}
-							/>
+							/> */}
 							<Route path="/pages/terms" exact={true} component={TermsPage} />
 							<Route path="/pages/menu/:pathname" exact={true} component={MenuPage} />
 
 							<Route path="/pages/about" exact={true} component={AboutPage} />
 							<Route path="/pages/faq" exact={true} component={FAQPage} />
 							<Route path="/pages/sitemap" exact={true} component={SitemapPage} />
-							{/* <Route path="/pages/featured" exact={true} component={FeaturedPage} /> */}
 							<Route
 								path="/collections/all/features/category/:category?"
 								exact={true}
 								component={AllFeaturesPage}
 							/>
-							<Route
+							{/* <Route
+								path="/collections/all/features/category/:category?"
+								exact={true}
+								component={AllFeaturesPage}
+							/> */}
+							{/* <Route
 								path="/collections/all/features/category/:category/:pathname?"
 								component={(props) => <FeaturedPage userInfo={userInfo} {...props} />}
-							/>
+							/> */}
 
+							<Route
+								path="/collections/all/features/category/:category/:pathname?"
+								exact={true}
+								component={FeaturedPage}
+							/>
 							<Route path="/pages/music" exact={true} component={MusicPage} />
 							<Route path="/" exact={true} component={HomePage} />
 							<Route path="/pages/track_your_order" exact={true} component={TrackOrderPage} />

@@ -96,7 +96,7 @@ const Sidebar = (props) => {
 						Home
 					</button>
 				</Link>
-				{props.userInfo ? (
+				{userInfo && userInfo.hasOwnProperty('first_name') ? (
 					<div className="sidebar_dropdown">
 						<button className="sidebar-btn primary">{first_name}</button>
 						<ul className="sidebar_dropdown_container">

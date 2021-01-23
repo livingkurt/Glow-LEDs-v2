@@ -36,9 +36,11 @@ import {
 	USER_UPDATE_USER_FAIL,
 	USER_SAVE_REQUEST,
 	USER_SAVE_SUCCESS,
-	USER_SAVE_FAIL
+	USER_SAVE_FAIL,
+	SET_CURRENT_USER,
+	USER_LOADING,
+	GET_ERRORS
 } from '../constants/userConstants';
-import { SET_CURRENT_USER, USER_LOADING } from '../actions/types';
 
 const isEmpty = require('is-empty');
 
@@ -79,6 +81,15 @@ export const userLoginReducer = (state = initialState, action: { type: any; payl
 				...state,
 				loading: true
 			};
+		default:
+			return state;
+	}
+};
+
+export const errorReducer = (state = {}, action: { type: any; payload: any }) => {
+	switch (action.type) {
+		case GET_ERRORS:
+			return action.payload;
 		default:
 			return state;
 	}

@@ -7,7 +7,8 @@ import { Loading } from '../../components/UtilityComponents';
 import { Helmet } from 'react-helmet';
 
 const EditProfilePage = (props) => {
-	const user_data = props.userInfo;
+	const userLogin = useSelector((state) => state.userLogin);
+	const { userInfo } = userLogin;
 	const history = useHistory();
 	const [ first_name, set_first_name ] = useState('');
 	const [ last_name, set_last_name ] = useState('');
@@ -36,7 +37,7 @@ const EditProfilePage = (props) => {
 
 		console.log(request);
 		if (request.isValid) {
-			dispatch(update({ ...user_data, email, first_name, last_name, email_subscription, shipping }));
+			dispatch(update({ ...userInfo, email, first_name, last_name, email_subscription, shipping }));
 			history.push('/secure/account/profile');
 		}
 	};
@@ -49,34 +50,34 @@ const EditProfilePage = (props) => {
 
 	useEffect(
 		() => {
-			if (user_data) {
-				setEmail(user_data.email);
-				set_first_name(user_data.first_name);
-				set_last_name(user_data.last_name);
-				set_email_subscription(user_data.email_subscription);
-				set_shipping(user_data.shipping);
-				// setPassword(user_data.password);
+			if (userInfo) {
+				setEmail(userInfo.email);
+				set_first_name(userInfo.first_name);
+				set_last_name(userInfo.last_name);
+				set_email_subscription(userInfo.email_subscription);
+				set_shipping(userInfo.shipping);
+				// setPassword(userInfo.password);
 			}
 			return () => {};
 		},
-		[ user_data ]
+		[ userInfo ]
 	);
 
-	useEffect(
-		() => {
-			if (userUpdate.userInfo) {
-				setEmail(userUpdate.userInfo.email);
-				set_first_name(userUpdate.userInfo.first_name);
-				set_last_name(userUpdate.userInfo.last_name);
-				set_email_subscription(userUpdate.userInfo.email_subscription);
-				set_shipping(userUpdate.userInfo.shipping);
-				// setPassword(userUpdate.userInfo.password);
-			}
+	// useEffect(
+	// 	() => {
+	// 		if (userUpdate.userInfo) {
+	// 			setEmail(userUpdate.userInfo.email);
+	// 			set_first_name(userUpdate.userInfo.first_name);
+	// 			set_last_name(userUpdate.userInfo.last_name);
+	// 			set_email_subscription(userUpdate.userInfo.email_subscription);
+	// 			set_shipping(userUpdate.userInfo.shipping);
+	// 			// setPassword(userUpdate.userInfo.password);
+	// 		}
 
-			return () => {};
-		},
-		[ userUpdate.userInfo ]
-	);
+	// 		return () => {};
+	// 	},
+	// 	[ userUpdate.userInfo ]
+	// );
 
 	return (
 		<div className="profile_container column p-20px">

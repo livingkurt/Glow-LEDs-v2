@@ -48,3 +48,7 @@ export const USER_SAVE_SUCCESS = 'USER_SAVE_SUCCESS';
 export const USER_SAVE_FAIL = 'USER_SAVE_FAIL';
 
 export const USER_LOGOUT = 'USER_LOGOUT';
+
+export const GET_ERRORS = 'GET_ERRORS';
+export const USER_LOADING = 'USER_LOADING';
+export const SET_CURRENT_USER = 'SET_CURRENT_USER';

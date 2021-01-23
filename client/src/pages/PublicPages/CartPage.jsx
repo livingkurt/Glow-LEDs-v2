@@ -6,10 +6,13 @@ import { Carousel } from '../../components/SpecialtyComponents';
 import { Helmet } from 'react-helmet';
 
 const CartPage = (props) => {
-	const user_data = props.userInfo;
+	// const user_data = props.userInfo;
 	const cart = useSelector((state) => state.cart);
 
 	const { cartItems } = cart;
+
+	const userLogin = useSelector((state) => state.userLogin);
+	const { userInfo } = userLogin;
 
 	const dispatch = useDispatch();
 	const [ no_items_in_cart, set_no_items_in_cart ] = useState('');
@@ -22,7 +25,7 @@ const CartPage = (props) => {
 		if (cartItems.length === 0) {
 			set_no_items_in_cart('Cannot proceed to checkout without any items in cart');
 		} else {
-			if (user_data) {
+			if (userInfo) {
 				props.history.push('/account/login?redirect=/secure/checkout/placeorder');
 			} else {
 				props.history.push('/checkout/decision');

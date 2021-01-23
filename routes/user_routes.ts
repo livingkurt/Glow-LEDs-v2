@@ -125,6 +125,116 @@ router.post('/login', (req, res) => {
 	});
 });
 
+router.put('/update/:id', isAuth, async (req, res) => {
+	try {
+		console.log({ '/update/:id': req.body });
+		// try {
+		const userId = req.params.id;
+
+		const user: any = await User.findById(userId);
+		console.log('/update/:id');
+		if (user) {
+			log_request({
+				method: 'GET',
+				path: req.originalUrl,
+				collection: 'User',
+				data: [ user ],
+				status: 200,
+				success: true,
+				ip: req.headers['x-forwarded-for'] || req.connection.remoteAddress
+			});
+			user.first_name = req.body.first_name || user.first_name;
+			user.last_name = req.body.last_name || user.last_name;
+			user.email = req.body.email || user.email;
+			// user.password = req.body.password || user.password;
+			user.isAdmin = req.body.isAdmin || user.isAdmin;
+			user.isVerified = req.body.isVerified || user.isVerified;
+			user.affiliate = req.body.affiliate || user.affiliate;
+			user.email_subscription = req.body.email_subscription;
+			user.shipping = req.body.shipping;
+			user.is_affiliated = req.body.is_affiliated || user.is_affiliated;
+			user.deleted = req.body.deleted || false;
+			const updatedUser = await user.save();
+			if (updatedUser) {
+				log_request({
+					method: 'PUT',
+					path: req.originalUrl,
+					collection: 'User',
+					data: [ updatedUser ],
+					status: 200,
+					success: true,
+					ip: req.headers['x-forwarded-for'] || req.connection.remoteAddress
+				});
+				// const updatedUser = await User.updateOne({ _id: userId }, user);
+				console.log({ updatedUser });
+				const payload = {
+					_id: updatedUser.id,
+					first_name: updatedUser.first_name,
+					last_name: updatedUser.last_name,
+					email: updatedUser.email,
+					affiliate: updatedUser.affiliate,
+					email_subscription: updatedUser.email_subscription,
+					shipping: updatedUser.shipping,
+					is_affiliated: updatedUser.is_affiliated,
+					isVerified: updatedUser.isVerified,
+					isAdmin: updatedUser.isAdmin,
+					token: getToken(updatedUser)
+				};
+				// Sign token
+				jwt.sign(
+					payload,
+					config.JWT_SECRET,
+					{
+						expiresIn: 31556926 // 1 year in seconds
+					},
+					(err: any, token: string) => {
+						res.json({
+							success: true,
+							token: 'Bearer ' + token
+						});
+					}
+				);
+				// res.send({
+				// 	_id: updatedUser.id,
+				// 	first_name: updatedUser.first_name,
+				// 	last_name: updatedUser.last_name,
+				// 	email: updatedUser.email,
+				// 	affiliate: updatedUser.affiliate,
+				// 	email_subscription: updatedUser.email_subscription,
+				// 	shipping: updatedUser.shipping,
+				// 	is_affiliated: updatedUser.is_affiliated,
+				// 	isVerified: updatedUser.isVerified,
+				// 	isAdmin: updatedUser.isAdmin,
+				// 	token: getToken(updatedUser)
+				// });
+			} else {
+				log_request({
+					method: 'PUT',
+					path: req.originalUrl,
+					collection: 'Product',
+					data: [ updatedUser ],
+					status: 500,
+					success: false,
+					ip: req.headers['x-forwarded-for'] || req.connection.remoteAddress
+				});
+				return res.status(500).send({ message: ' Error in Updating User.' });
+			}
+		} else {
+			res.status(404).send({ message: 'User Not Found' });
+		}
+	} catch (error) {
+		log_error({
+			method: 'PUT',
+			path: req.originalUrl,
+			collection: 'User',
+			error,
+			status: 500,
+			success: false
+		});
+		res.status(500).send({ error, message: 'Error Creating User' });
+	}
+});
+
 // router.post('/login', async (req, res) => {
 // 	try {
 // 		const email = req.body.email;
@@ -655,88 +765,76 @@ router.post('/reset_password', async (req, res) => {
 		res.status(500).send({ error, message: 'Error Creating User' });
 	}
 });
-router.put('/update/:id', isAuth, async (req, res) => {
-	try {
-		console.log({ '/update/:id': req.body });
-		// try {
-		const userId = req.params.id;
 
-		const user: any = await User.findById(userId);
-		console.log('/update/:id');
-		if (user) {
-			log_request({
-				method: 'GET',
-				path: req.originalUrl,
-				collection: 'User',
-				data: [ user ],
-				status: 200,
-				success: true,
-				ip: req.headers['x-forwarded-for'] || req.connection.remoteAddress
-			});
-			user.first_name = req.body.first_name || user.first_name;
-			user.last_name = req.body.last_name || user.last_name;
-			user.email = req.body.email || user.email;
-			// user.password = req.body.password || user.password;
-			user.isAdmin = req.body.admin || user.isAdmin;
-			user.isVerified = req.body.verified || user.isVerified;
-			user.affiliate = req.body.affiliate || user.affiliate;
-			user.email_subscription = req.body.email_subscription;
-			user.shipping = req.body.shipping;
-			user.is_affiliated = req.body.is_affiliated || user.is_affiliated;
-			user.deleted = req.body.deleted || false;
-			const updatedUser = await user.save();
-			if (updatedUser) {
-				log_request({
-					method: 'PUT',
-					path: req.originalUrl,
-					collection: 'User',
-					data: [ updatedUser ],
-					status: 200,
-					success: true,
-					ip: req.headers['x-forwarded-for'] || req.connection.remoteAddress
-				});
-				// const updatedUser = await User.updateOne({ _id: userId }, user);
-				console.log({ updatedUser });
-				res.send({
-					_id: updatedUser.id,
-					first_name: updatedUser.first_name,
-					last_name: updatedUser.last_name,
-					email: updatedUser.email,
-					affiliate: updatedUser.affiliate,
-					email_subscription: updatedUser.email_subscription,
-					shipping: updatedUser.shipping,
-					is_affiliated: updatedUser.is_affiliated,
-					isVerified: updatedUser.isVerified,
-					isAdmin: updatedUser.isAdmin,
-					token: getToken(updatedUser)
-				});
-			} else {
-				log_request({
-					method: 'PUT',
-					path: req.originalUrl,
-					collection: 'Product',
-					data: [ updatedUser ],
-					status: 500,
-					success: false,
-					ip: req.headers['x-forwarded-for'] || req.connection.remoteAddress
-				});
-				return res.status(500).send({ message: ' Error in Updating User.' });
-			}
-		} else {
-			res.status(404).send({ message: 'User Not Found' });
-		}
-	} catch (error) {
-		log_error({
-			method: 'PUT',
-			path: req.originalUrl,
-			collection: 'User',
-			error,
-			status: 500,
-			success: false
-		});
-		res.status(500).send({ error, message: 'Error Creating User' });
-	}
-});
+// router.put('/update/:id', isAuth, async (req, res) => {
+// 	try {
+// 		console.log({ '/update/:id': req.body });
+// 		// try {
+// 		const userId = req.params.id;
+
+// 		const user: any = await User.findById(userId);
+// 		console.log({ user });
+// 		if (user) {
+// 			log_request({
+// 				method: 'GET',
+// 				path: req.originalUrl,
+// 				collection: 'User',
+// 				data: [ user ],
+// 				status: 200,
+// 				success: true,
+// 				ip: req.headers['x-forwarded-for'] || req.connection.remoteAddress
+// 			});
+// 			const updatedUser = await User.updateOne({ _id: userId }, req.body);
+// 			console.log({ updatedUser });
+// 			if (updatedUser) {
+// 				log_request({
+// 					method: 'PUT',
+// 					path: req.originalUrl,
+// 					collection: 'User',
+// 					data: [ updatedUser ],
+// 					status: 200,
+// 					success: false,
+// 					ip: req.headers['x-forwarded-for'] || req.connection.remoteAddress
+// 				});
+// 				return res.send({
+// 					_id: updatedUser.id,
+// 					first_name: updatedUser.first_name,
+// 					last_name: updatedUser.last_name,
+// 					email: updatedUser.email,
+// 					affiliate: updatedUser.affiliate,
+// 					email_subscription: updatedUser.email_subscription,
+// 					shipping: updatedUser.shipping,
+// 					is_affiliated: updatedUser.is_affiliated,
+// 					isVerified: updatedUser.isVerified,
+// 					isAdmin: updatedUser.isAdmin,
+// 					token: getToken(updatedUser)
+// 				});
+// 			}
+// 		} else {
+// 			log_request({
+// 				method: 'DELETE',
+// 				path: req.originalUrl,
+// 				collection: 'User',
+// 				data: [ user ],
+// 				status: 500,
+// 				success: false,
+// 				ip: req.headers['x-forwarded-for'] || req.connection.remoteAddress
+// 			});
+// 			console.log('Error in Updating User.');
+// 			return res.status(500).send({ message: ' Error in Updating User.' });
+// 		}
+// 	} catch (error) {
+// 		log_error({
+// 			method: 'PUT',
+// 			path: req.originalUrl,
+// 			collection: 'User',
+// 			error,
+// 			status: 500,
+// 			success: false
+// 		});
+// 		res.status(500).send({ error, message: 'Error Updating User' });
+// 	}
+// });
 
 // router.put('/update/:id', isAuth, async (req, res) => {
 // 	console.log({ user_routes_put: req.body });
@@ -886,6 +984,7 @@ router.post('/getuser/:id', async (req, res) => {
 				email: user.email,
 				password: user.password,
 				isAdmin: user.isAdmin,
+				isVerified: user.isVerified,
 				affiliate: user.affiliate,
 				is_affiliated: user.is_affiliated,
 				email_subscription: user.email_subscription,

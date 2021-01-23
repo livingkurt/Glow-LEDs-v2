@@ -6,10 +6,11 @@ import { Loading } from '../../components/UtilityComponents';
 import { Helmet } from 'react-helmet';
 
 const EditDevicePage = (props) => {
-	const user_data = props.userInfo;
+	const userLogin = useSelector((state) => state.userLogin);
+	const { userInfo } = userLogin;
 
 	const [ id, set_id ] = useState('');
-	const [ user, set_user ] = useState(user_data._id);
+	const [ user, set_user ] = useState(userInfo._id);
 	const [ device_name, set_device_name ] = useState('');
 	const [ query_url, set_query_url ] = useState('');
 	const [ location, set_location ] = useState('');

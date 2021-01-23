@@ -5,54 +5,62 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Helmet } from 'react-helmet';
 
 const ProfilePage = (props) => {
-	const user_data = props.userInfo;
-	const [ first_name, set_first_name ] = useState('');
-	const [ last_name, set_last_name ] = useState('');
-	const [ shipping, set_shipping ] = useState({});
-	const [ password, setPassword ] = useState('');
-	const [ is_affiliated, set_is_affiliated ] = useState();
-	const [ email_subscription, set_email_subscription ] = useState(true);
-	const [ email, setEmail ] = useState('');
-	const dispatch = useDispatch();
+	// const userInfo = props.userInfo;
 
-	const userUpdate = useSelector((state) => state.userUpdate);
+	const userLogin = useSelector((state) => state.userLogin);
+	const { userInfo } = userLogin;
+	console.log({ userInfo });
+	// const [ first_name, set_first_name ] = useState('');
+	// const [ last_name, set_last_name ] = useState('');
+	// const [ shipping, set_shipping ] = useState({});
+	// const [ password, setPassword ] = useState('');
+	// const [ is_affiliated, set_is_affiliated ] = useState();
+	// const [ email_subscription, set_email_subscription ] = useState(true);
+	// const [ email, setEmail ] = useState('');
+	// const dispatch = useDispatch();
 
-	useEffect(
-		() => {
-			if (user_data) {
-				setEmail(user_data.email);
-				set_first_name(user_data.first_name);
-				set_last_name(user_data.last_name);
-				set_shipping(user_data.shipping);
-				setPassword(user_data.password);
-				set_is_affiliated(user_data.is_affiliated);
-				set_email_subscription(user_data.email_subscription);
-			}
-			dispatch(listMyOrders());
-			return () => {};
-		},
-		[ user_data ]
-	);
+	// const userUpdate = useSelector((state) => state.userUpdate);
 
-	useEffect(
-		() => {
-			if (userUpdate.userInfo) {
-				setEmail(userUpdate.userInfo.email);
-				set_first_name(userUpdate.userInfo.first_name);
-				set_last_name(userUpdate.userInfo.last_name);
-				set_shipping(userUpdate.userInfo.shipping);
-				setPassword(userUpdate.userInfo.password);
-				set_is_affiliated(user_data.userInfo.is_affiliated);
-				set_email_subscription(userUpdate.email_subscription);
-			}
-			return () => {};
-		},
-		[ userUpdate.userInfo ]
-	);
+	// useEffect(
+	// 	() => {
 
-	const container_styles = {
-		marginBottom: '20px'
-	};
+	// 		return () => {};
+	// 	},
+	// 	[ userInfo ]
+	// );
+	// useEffect(
+	// 	() => {
+	// 		// if (userInfo) {
+	// 		// 	setEmail(userInfo.email);
+	// 		// 	set_first_name(userInfo.first_name);
+	// 		// 	set_last_name(userInfo.last_name);
+	// 		// 	set_shipping(userInfo.shipping);
+	// 		// 	setPassword(userInfo.password);
+	// 		// 	set_is_affiliated(userInfo.is_affiliated);
+	// 		// 	set_email_subscription(userInfo.email_subscription);
+	// 		// }
+	// 		dispatch(listMyOrders());
+	// 		return () => {};
+	// 	},
+	// 	[ userInfo ]
+	// );
+
+	// useEffect(
+	// 	() => {
+	// 		if (userUpdate.userInfo) {
+	// 			setEmail(userUpdate.userInfo.email);
+	// 			set_first_name(userUpdate.userInfo.first_name);
+	// 			set_last_name(userUpdate.userInfo.last_name);
+	// 			set_shipping(userUpdate.userInfo.shipping);
+	// 			setPassword(userUpdate.userInfo.password);
+	// 			set_is_affiliated(userUpdate.userInfo.is_affiliated);
+
+	// 			set_email_subscription(userUpdate.email_subscription);
+	// 		}
+	// 		return () => {};
+	// 	},
+	// 	[ userUpdate.userInfo ]
+	// );
 
 	return (
 		<div className="column p-20px inner_content">
@@ -70,15 +78,15 @@ const ProfilePage = (props) => {
 				<div column>
 					<div className="column mb-20px">
 						<h3>First Name</h3>
-						<label>{first_name}</label>
+						<label>{userInfo.first_name}</label>
 					</div>
 					<div className="column mb-20px">
 						<h3>Last Name</h3>
-						<label>{last_name}</label>
+						<label>{userInfo.last_name}</label>
 					</div>
 					<div className="column mb-20px">
 						<h3>Email</h3>
-						<label>{email}</label>
+						<label>{userInfo.email}</label>
 					</div>
 					<div className="column mb-20px">
 						<h3>Password</h3>
@@ -87,21 +95,21 @@ const ProfilePage = (props) => {
 					<div className="label">
 						<h3>Shipping Address</h3>
 						<div>
-							{shipping.first_name} {shipping.last_name}
+							{userInfo.shipping.first_name} {userInfo.shipping.last_name}
 						</div>
 						<div>
-							{shipping.address_1} {shipping.address_2}
+							{userInfo.shipping.address_1} {userInfo.shipping.address_2}
 						</div>
 						<div>
-							{shipping.city}, {shipping.state} {shipping.postalCode} {shipping.country}
+							{userInfo.shipping.city}, {userInfo.shipping.state} {userInfo.shipping.postalCode}{' '}
+							{userInfo.shipping.country}
 						</div>
-						<div>{shipping.international && 'International'}</div>
-						<div>{shipping.email}</div>
+						<div>{userInfo.shipping.international && 'International'}</div>
+						<div>{userInfo.shipping.email}</div>
 					</div>
 					<div className="column mb-20px">
 						<h3>Promotional Emails</h3>
-						{console.log({ email_subscription })}
-						<label>{email_subscription ? 'Subscribed' : 'Not Subscribed'}</label>
+						<label>{userInfo.email_subscription ? 'Subscribed' : 'Not Subscribed'}</label>
 					</div>
 				</div>
 				<div className="row">
@@ -126,11 +134,9 @@ const ProfilePage = (props) => {
 							</button>
 						</Link>
 					</div>
-					{is_affiliated && user_data.affiliate ? (
+					{userInfo.is_affiliated && userInfo.affiliate ? (
 						<div className="h-20px ml-1rem">
-							<Link
-								to={'/secure/account/edit_affiliate/' + user_data.affiliate || user_data.affiliate._id}
-							>
+							<Link to={'/secure/account/edit_affiliate/' + userInfo.affiliate || userInfo.affiliate._id}>
 								<button className="btn primary">Edit Affiliate Profile</button>
 							</Link>
 						</div>
@@ -145,7 +151,7 @@ const ProfilePage = (props) => {
 						<div className="h-20px ml-1rem">
 							<Link to={'/secure/account/affiliate_signup'}>
 								<button className="btn primary">
-									{user_data.affiliate ? 'Edit Affiliate Profile' : 'Affiliate Sign Up'}
+									{userInfo.affiliate ? 'Edit Affiliate Profile' : 'Affiliate Sign Up'}
 								</button>
 							</Link>
 						</div>
