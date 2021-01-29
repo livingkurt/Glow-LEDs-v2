@@ -54,7 +54,7 @@ export const getToken = (user: any) => {
 		},
 		config.JWT_SECRET,
 		{
-			expiresIn: 31556926 // 1 year in seconds
+			expiresIn: '48h' // 1 year in seconds
 		}
 	);
 };

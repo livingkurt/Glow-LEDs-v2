@@ -111,7 +111,7 @@ router.post('/login', (req, res) => {
 					payload,
 					config.JWT_SECRET,
 					{
-						expiresIn: 31556926 // 1 year in seconds
+						expiresIn: '48hr' // 1 year in seconds
 					},
 					(err: any, token: string) => {
 						res.json({
@@ -187,7 +187,7 @@ router.put('/update/:id', isAuth, async (req, res) => {
 					payload,
 					config.JWT_SECRET,
 					{
-						expiresIn: 31556926 // 1 year in seconds
+						expiresIn: '48hr' // 1 year in seconds
 					},
 					(err: any, token: string) => {
 						res.json({

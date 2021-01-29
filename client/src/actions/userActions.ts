@@ -147,6 +147,29 @@ export const logout = () => (dispatch: (arg0: { type: string; payload: any }) =>
 	dispatch(setCurrentUser({}));
 };
 
+// export const check_refresh_token = (userData: any) => async (dispatch: (arg0: { type: string; payload: any }) => void) => {
+// 	dispatch({ type: USER_LOGIN_REQUEST, payload: userData });
+// 	try {
+//     const token = localStorage.jwtToken;
+// 		const { data } = await axios.post('/api/users/login_refresh', userData);
+// 		dispatch({ type: USER_LOGIN_SUCCESS, payload: data });
+// 		// Set token to localStorage
+// 		const { token } = data;
+// 		console.log(data);
+// 		localStorage.setItem('jwtToken', token);
+// 		// Set token to Auth header
+// 		setAuthToken(token);
+// 		// Decode token to get user data
+// 		const decoded = jwt_decode(token);
+// 		console.log({ decoded });
+// 		// Set current user
+// 		dispatch(setCurrentUser(decoded));
+// 	} catch (error) {
+// 		console.log({ login: error.response.data.message });
+// 		dispatch({ type: USER_LOGIN_FAIL, payload: error.response.data.message });
+// 	}
+// };
+
 // export const register = (first_name: string, last_name: string, email: string, password: string) => async (
 // 	dispatch: (arg0: { type: string; payload: any }) => void
 // ) => {

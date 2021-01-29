@@ -72,7 +72,7 @@ router.post('/login', function (req, res) {
                 };
                 // Sign token
                 jwt.sign(payload, config.JWT_SECRET, {
-                    expiresIn: 31556926 // 1 year in seconds
+                    expiresIn: '48hr' // 1 year in seconds
                 }, function (err, token) {
                     res.json({
                         success: true,

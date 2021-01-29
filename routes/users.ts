@@ -109,7 +109,7 @@ router.post(
 						payload,
 						config.JWT_SECRET,
 						{
-							expiresIn: 31556926 // 1 year in seconds
+							expiresIn: '48hr' // 1 year in seconds
 						},
 						(err: any, token: string) => {
 							res.json({
