@@ -66,6 +66,7 @@ export const register = (userData: any) => async (dispatch: (arg0: { type: strin
 		// axios.post('/api/emails/verify', data);
 		// Cookie.set('userInfo', JSON.stringify(data));
 	} catch (error) {
+		console.log({ error: error.response.data.message });
 		dispatch({ type: USER_REGISTER_FAIL, payload: error.response.data.message });
 	}
 };
@@ -327,7 +328,6 @@ export const updateUser = (userdata: any) => async (
 };
 
 export const reset_password = (email: string) => async (dispatch: (arg0: { type: string; payload: any }) => void) => {
-	console.log({ password_reset: email });
 	dispatch({ type: USER_PASSWORD_RESET_REQUEST, payload: { email } });
 	try {
 		const { data } = await axios.post('/api/users/reset_password', { email });
@@ -342,7 +342,6 @@ export const password_reset = (user_id: string, password: string, repassword: st
 	dispatch: (arg0: { type: string; payload: any }) => void,
 	getState: () => { userLogin: { userInfo: any } }
 ) => {
-	console.log({ user_id, password, repassword });
 	dispatch({ type: USER_RESET_PASSWORD_REQUEST, payload: { user_id, password, repassword } });
 	try {
 		const { data } = await axios.put('/api/users/password_reset', { user_id, password, repassword });

@@ -4,6 +4,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { register } from '../../actions/userActions';
 import { validate_registration } from '../../utils/validations';
 import { Helmet } from 'react-helmet';
+import { Loading } from '../../components/UtilityComponents';
 
 const RegisterPage = (props) => {
 	const [ first_name, set_first_name ] = useState('');
@@ -19,7 +20,8 @@ const RegisterPage = (props) => {
 	const [ re_password_validations, setRePasswordValidations ] = useState('');
 
 	const userRegister = useSelector((state) => state.userRegister);
-	const { userInfo, error } = userRegister;
+	const { loading, userInfo, error } = userRegister;
+	console.log({ error });
 	const dispatch = useDispatch();
 
 	const redirect = props.location.search ? props.location.search.split('=')[1] : '/';
@@ -84,7 +86,8 @@ const RegisterPage = (props) => {
 							<label style={{ width: '100%' }}>Account</label>
 						</h1>
 					</li>
-					<li>
+					<Loading loading={loading} error={error} />
+					{/* <li>
 						<div className="jc-c">
 							{error && (
 								<label style={{ textAlign: 'center' }}>
@@ -92,7 +95,7 @@ const RegisterPage = (props) => {
 								</label>
 							)}
 						</div>
-					</li>
+					</li> */}
 
 					<li>
 						<label htmlFor="first_name">First Name</label>

@@ -41,6 +41,9 @@ const LoginPage = (props) => {
 			//
 		};
 	}, []);
+	setTimeout(() => {
+		set_loading(false);
+	}, 3000);
 
 	const submitHandler = (e) => {
 		e.preventDefault();
