@@ -23,10 +23,9 @@ export const validate_promo_code = (data: any) => {
 		errors.promo_code = 'Promo Code Field Empty';
 	}
 	if (data.user_data) {
-		if (promo && promo.admin_only && promo.admin_only && data.user_data.isAdmin === false) {
+		if (promo && promo.admin_only && data.user_data.isAdmin === false) {
 			errors.promo_code = 'Promo Code Not Active';
-		}
-		if (promo && promo.affiliate_only && promo.affiliate_only && data.user_data.is_affiliated === false) {
+		} else if (promo && promo.affiliate_only && data.user_data.is_affiliated === false) {
 			errors.promo_code = 'Promo Code Not Active';
 		}
 	} else if (!data.user_data) {

@@ -46,43 +46,80 @@ import jwt_decode from 'jwt-decode';
 
 // import { GET_ERRORS, SET_CURRENT_USER, USER_LOADING } from './types';
 
-// Register User
-export const register = (userData: any) => (dispatch: (arg0: { type: string; payload: any }) => any) => {
-	console.log({ userData });
-	axios.post('/api/users/register', userData).catch((err) =>
-		dispatch({
-			type: GET_ERRORS,
-			payload: err.response.data
-		})
-	);
+// // Register User
+// export const register = (userData: any) => (dispatch: (arg0: { type: string; payload: any }) => any) => {
+// 	console.log({ userData });
+// 	axios.post('/api/users/register', userData).catch((err) =>
+// 		dispatch({
+// 			type: GET_ERRORS,
+// 			payload: err.response.data
+// 		})
+// 	);
+// };
+
+export const register = (userData: any) => async (dispatch: (arg0: { type: string; payload: any }) => void) => {
+	dispatch({ type: USER_REGISTER_REQUEST, payload: userData });
+	try {
+		const { data } = await axios.post('/api/users/register', userData);
+		dispatch({ type: USER_REGISTER_SUCCESS, payload: data });
+		axios.post('/api/emails/verified', data);
+		// axios.post('/api/emails/verify', data);
+		// Cookie.set('userInfo', JSON.stringify(data));
+	} catch (error) {
+		dispatch({ type: USER_REGISTER_FAIL, payload: error.response.data.message });
+	}
 };
 
-// Login - get user token
-export const login = (userData: any) => (dispatch: (arg0: { type: string; payload: any }) => void) => {
-	console.log(userData);
-	axios
-		.post('/api/users/login', userData)
-		.then((res) => {
-			// Save to localStorage
+// // Login - get user token
+// export const login = (userData: any) => (dispatch: (arg0: { type: string; payload: any }) => void) => {
+// 	console.log(userData);
+// 	axios
+// 		.post('/api/users/login', userData)
+// 		.then((res) => {
+// 			// Save to localStorage
 
-			// Set token to localStorage
-			const { token } = res.data;
-			console.log(res.data);
-			localStorage.setItem('jwtToken', token);
-			// Set token to Auth header
-			setAuthToken(token);
-			// Decode token to get user data
-			const decoded = jwt_decode(token);
-			console.log({ decoded });
-			// Set current user
-			dispatch(setCurrentUser(decoded));
-		})
-		.catch((err) =>
-			dispatch({
-				type: GET_ERRORS,
-				payload: err.response.data
-			})
-		);
+// 			// Set token to localStorage
+// 			const { token } = res.data;
+// 			console.log(res.data);
+// 			localStorage.setItem('jwtToken', token);
+// 			// Set token to Auth header
+// 			setAuthToken(token);
+// 			// Decode token to get user data
+// 			const decoded = jwt_decode(token);
+// 			console.log({ decoded });
+// 			// Set current user
+// 			dispatch(setCurrentUser(decoded));
+// 		})
+// 		.catch(
+// 			(err) =>
+// 				// dispatch({
+// 				// 	type: GET_ERRORS,
+// 				// 	payload: err.response.data.message
+// 				// })
+// 			// console.log({ login: error });
+// 			// dispatch({ type: USER_LOGIN_FAIL, payload: error.response.data.message })
+// 		);
+// };
+export const login = (userData: any) => async (dispatch: (arg0: { type: string; payload: any }) => void) => {
+	dispatch({ type: USER_LOGIN_REQUEST, payload: userData });
+	try {
+		const { data } = await axios.post('/api/users/login', userData);
+		dispatch({ type: USER_LOGIN_SUCCESS, payload: data });
+		// Set token to localStorage
+		const { token } = data;
+		console.log(data);
+		localStorage.setItem('jwtToken', token);
+		// Set token to Auth header
+		setAuthToken(token);
+		// Decode token to get user data
+		const decoded = jwt_decode(token);
+		console.log({ decoded });
+		// Set current user
+		dispatch(setCurrentUser(decoded));
+	} catch (error) {
+		console.log({ login: error.response.data.message });
+		dispatch({ type: USER_LOGIN_FAIL, payload: error.response.data.message });
+	}
 };
 
 // Set logged in user

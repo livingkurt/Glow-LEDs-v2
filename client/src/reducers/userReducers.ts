@@ -68,23 +68,26 @@ const initialState = {
 // 	}
 // }
 
-export const userLoginReducer = (state = initialState, action: { type: any; payload: any }) => {
-	switch (action.type) {
-		case SET_CURRENT_USER:
-			return {
-				...state,
-				// isAuthenticated: !isEmpty(action.payload),
-				userInfo: action.payload
-			};
-		case USER_LOADING:
-			return {
-				...state,
-				loading: true
-			};
-		default:
-			return state;
-	}
-};
+// export const userLoginReducer = (state = initialState, action: { type: any; payload: any }) => {
+// 	switch (action.type) {
+// 		case SET_CURRENT_USER:
+// 			return {
+// 				...state,
+// 				// isAuthenticated: !isEmpty(action.payload),
+// 				userInfo: action.payload
+// 			};
+// 		case USER_LOADING:
+// 			return {
+// 				...state,
+// 				loading: true
+// 			};
+// 		case USER_LOGIN_FAIL:
+// 			console.log({ payload: action.payload });
+// 			return { loading: false, error: action.payload };
+// 		default:
+// 			return state;
+// 	}
+// };
 
 export const errorReducer = (state = {}, action: { type: any; payload: any }) => {
 	switch (action.type) {
@@ -95,21 +98,25 @@ export const errorReducer = (state = {}, action: { type: any; payload: any }) =>
 	}
 };
 
-// export const userLoginReducer = (state = {}, action: { type: any; payload: any }) => {
-// 	switch (action.type) {
-// 		case USER_LOGIN_REQUEST:
-// 			return { loading: true };
-// 		case USER_LOGIN_SUCCESS:
-// 			return { loading: false, userInfo: action.payload };
-// 		case USER_LOGIN_FAIL:
-// 			console.log({ payload: action.payload });
-// 			return { loading: false, error: action.payload };
-// 		case USER_LOGOUT:
-// 			return {};
-// 		default:
-// 			return state;
-// 	}
-// };
+export const userLoginReducer = (state = {}, action: { type: any; payload: any }) => {
+	switch (action.type) {
+		case USER_LOGIN_REQUEST:
+			return { loading: true };
+		case SET_CURRENT_USER:
+			return {
+				...state,
+				// isAuthenticated: !isEmpty(action.payload),
+				userInfo: action.payload
+			};
+		case USER_LOGIN_FAIL:
+			console.log({ payload: action.payload });
+			return { loading: false, error: action.payload };
+		// case USER_LOGOUT:
+		// 	return {};
+		default:
+			return state;
+	}
+};
 
 export const userPasswordResetReducer = (state = {}, action: { type: any; payload: any }) => {
 	switch (action.type) {

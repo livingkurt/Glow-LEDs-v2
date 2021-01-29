@@ -39,7 +39,7 @@ const RegisterPage = (props) => {
 		if (request.isValid) {
 			dispatch(register({ first_name, last_name, email, password, rePassword }));
 			// dispatch(registerUser(first_name, last_name, email, password, rePassword));
-			props.history.push('/account/login');
+			// props.history.push('/account/login');
 		}
 	};
 

@@ -413,10 +413,12 @@ const PlaceOrderPage = (props) => {
 	const check_code = (e) => {
 		e.preventDefault();
 		const data = { promo_code, promos, user_data, items_price };
+		console.log({ data });
 		const request = validate_promo_code(data);
 
 		set_promo_code_validations(request.errors.promo_code);
 		console.log(request);
+		console.log({ request });
 
 		if (request.isValid) {
 			const promo = promos.find((promo) => promo.promo_code === promo_code.toLowerCase());
